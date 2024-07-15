@@ -6,23 +6,42 @@
 <body>
   <h1>Videochamada</h1>
   <video id="video" autoplay playsinline></video>
+  <div>
+    <button id="startButton">Abrir Câmera</button>
+    <button id="stopButton" disabled>Fechar Câmera</button>
+  </div>
 
   <script>
+    let stream;
+
     async function startVideo() {
       try {
         const constraints = {
           video: true
         };
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
         const videoElement = document.getElementById('video');
         videoElement.srcObject = stream;
+        document.getElementById('startButton').disabled = true;
+        document.getElementById('stopButton').disabled = false;
       } catch (error) {
         console.error('Erro ao acessar a câmera: ', error);
       }
     }
 
-    // Chame a função para iniciar o vídeo quando a página carregar
-    window.onload = startVideo;
+    function stopVideo() {
+      const videoElement = document.getElementById('video');
+      videoElement.srcObject = null;
+      if (stream) {
+        const tracks = stream.getTracks();
+        tracks.forEach(track => track.stop());
+      }
+      document.getElementById('startButton').disabled = false;
+      document.getElementById('stopButton').disabled = true;
+    }
+
+    document.getElementById('startButton').addEventListener('click', startVideo);
+    document.getElementById('stopButton').addEventListener('click', stopVideo);
   </script>
 </body>
 </html>
