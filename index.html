@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Videochamada</title>
+</head>
+<body>
+  <h1>Videochamada</h1>
+  <video id="video" autoplay playsinline></video>
+
+  <script>
+    async function startVideo() {
+      try {
+        const constraints = {
+          video: true
+        };
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const videoElement = document.getElementById('video');
+        videoElement.srcObject = stream;
+      } catch (error) {
+        console.error('Erro ao acessar a câmera: ', error);
+      }
+    }
+
+    // Chame a função para iniciar o vídeo quando a página carregar
+    window.onload = startVideo;
+  </script>
+</body>
+</html>
